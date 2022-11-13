@@ -7,14 +7,14 @@ export default (server: any, app: Express) => {
   const room = io.of('/room');
   const chat = io.of('/chat');
 
-  room.on('connection', socket => {
+  room.on('connection', (socket) => {
     console.log('room 네임스페이스에 접속');
     socket.on('disconnect', () => {
       console.log('room 네임스페이스 접속 해제');
     });
   });
 
-  chat.on('connection', socket => {
+  chat.on('connection', (socket) => {
     console.log('chat 네임스페이스에 접속');
     const req = socket.request;
     const {
@@ -29,7 +29,7 @@ export default (server: any, app: Express) => {
     });
   });
 
-  io.on('connection', socket => {
+  io.on('connection', (socket) => {
     const req = socket.request;
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     console.log('새로운 클라이언트 접속!', ip, socket.id);
@@ -37,10 +37,10 @@ export default (server: any, app: Express) => {
       console.log('클라이언트 접속 해제', ip, socket.id);
       clearInterval((socket as any).interval);
     });
-    socket.on('error', error => {
+    socket.on('error', (error) => {
       console.error(error);
     });
-    socket.on('reply', data => {
+    socket.on('reply', (data) => {
       console.log(data);
     });
     (socket as any).interval = setInterval(() => {
