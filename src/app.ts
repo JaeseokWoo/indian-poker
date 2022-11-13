@@ -24,7 +24,7 @@ app.use(
       httpOnly: true,
       secure: false,
     },
-  }),
+  })
 );
 
 app.use((req, res, next) => {
