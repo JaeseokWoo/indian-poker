@@ -7,7 +7,7 @@ import ColorHash from 'color-hash';
 import cors from 'cors';
 
 import webSocket from './socket';
-import indexRouter from './routes';
+import roomRouter from './routes/room';
 
 const app = express();
 app.set('port', process.env.PORT || 3001);
@@ -36,10 +36,11 @@ app.use((req, res, next) => {
     const colorHash = new ColorHash();
     (req.session as any).color = colorHash.hex(req.sessionID);
   }
+  console.log((req.session as any).color);
   next();
 });
 
-app.use('/room', indexRouter);
+app.use('/room', roomRouter);
 
 app.use((req, res, next) => {
   console.log('here');
