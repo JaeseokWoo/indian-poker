@@ -5,7 +5,7 @@ import './App.css';
 
 function App() {
   useEffect(() => {
-    const socket = io('http://localhost:3000', {
+    const socket = io('http://localhost:3001', {
       path: '/socket.io',
       transports: ['websocket'],
     });
@@ -14,7 +14,7 @@ function App() {
       console.log('disconnected with server');
     });
 
-    socket.on('news', data => {
+    socket.on('news', (data) => {
       console.log(data);
       socket.emit('reply', 'Hello Node.JS');
     });

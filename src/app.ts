@@ -8,7 +8,7 @@ import ColorHash from 'color-hash';
 import webSocket from './socket';
 
 const app = express();
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 3001);
 
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, '../front-end/build')));
