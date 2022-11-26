@@ -4,12 +4,16 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import morgan from 'morgan';
 import ColorHash from 'color-hash';
+import cors from 'cors';
 
 import webSocket from './socket';
+import indexRouter from './routes';
 
 const app = express();
 app.set('port', process.env.PORT || 3001);
+app.set('rooms', []);
 
+app.use(cors());
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, '../front-end/build')));
 app.use(express.json());
@@ -19,7 +23,7 @@ app.use(
   session({
     resave: false,
     saveUninitialized: false,
-    secret: process.env.COOKIE_SECRET as string,
+    secret: process.env.COOKIE_SECRET || ('abc' as string),
     cookie: {
       httpOnly: true,
       secure: false,
@@ -34,6 +38,8 @@ app.use((req, res, next) => {
   }
   next();
 });
+
+app.use('/room', indexRouter);
 
 app.use((req, res, next) => {
   console.log('here');
