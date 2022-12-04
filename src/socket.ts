@@ -1,11 +1,13 @@
-import { Express } from 'express';
+import { Express, RequestHandler } from 'express';
 import { Server } from 'socket.io';
+import ios from 'express-socket.io-session';
 
-export default (server: any, app: Express) => {
+export default (server: any, app: Express, sessionMiddleware: RequestHandler) => {
   const io = new Server(server, { path: '/socket.io' });
   app.set('io', io);
   const room = io.of('/room');
   const chat = io.of('/chat');
+  io.use(ios(sessionMiddleware, { autoSave: true }));
 
   room.on('connection', (socket) => {
     console.log('room 네임스페이스에 접속');

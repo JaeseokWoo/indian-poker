@@ -9,13 +9,15 @@ export default function List({ rooms }: { rooms: any }) {
         <table>
           <thead>
             <tr>
+              <th>방 ID</th>
               <th>방 제목</th>
               <th>방장</th>
             </tr>
           </thead>
           <tbody>
             {rooms.map((room: any) => (
-              <tr key={room.title}>
+              <tr key={room.id}>
+                <td>{room.id}</td>
                 <td>{room.title}</td>
                 <td>{room.owner}</td>
               </tr>
