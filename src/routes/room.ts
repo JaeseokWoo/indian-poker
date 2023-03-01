@@ -15,11 +15,11 @@ router.post('/', (req, res, next) => {
   res.send(true);
 });
 
-router.get('/room/:id', (req, res, next) => {
+router.get('/:id', (req, res, next) => {
   const { id } = req.params;
-  const room = req.app.get('rooms').find(({ id: roomId }: { id: any }) => roomId === id);
+  const room = req.app.get('rooms').find(({ id: roomId }: { id: any }) => roomId === Number(id));
 
-  return res.send(room);
+  return res.json(room);
 });
 
 export default router;
