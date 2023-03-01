@@ -1,6 +1,9 @@
-import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import Button from './Button';
 
 export default function List({ rooms }: { rooms: any }) {
+  const navigate = useNavigate();
   return (
     <>
       <h1>GIF 채팅방</h1>
@@ -20,6 +23,14 @@ export default function List({ rooms }: { rooms: any }) {
                 <td>{room.id}</td>
                 <td>{room.title}</td>
                 <td>{room.owner}</td>
+                <td>
+                  <Button
+                    title="참가하기"
+                    onClick={() => {
+                      navigate(`/room/${room.id}`);
+                    }}
+                  />
+                </td>
               </tr>
             ))}
           </tbody>

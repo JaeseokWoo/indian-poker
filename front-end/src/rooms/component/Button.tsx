@@ -1,11 +1,5 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { MouseEventHandler } from 'react';
 
-export default function Button() {
-  const navigate = useNavigate();
-
-  const handleClick = () => {
-    navigate('/form');
-  };
-  return <button onClick={handleClick}>방 생성</button>;
+export default function Button({ title, onClick }: { title: string; onClick: MouseEventHandler<HTMLButtonElement> }) {
+  return <button onClick={onClick}>{title}</button>;
 }

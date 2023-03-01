@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 
 import List from '../component/List';
@@ -6,6 +7,8 @@ import Button from '../component/Button';
 
 export default function Rooms() {
   const [rooms, setRooms] = useState<any[]>([]);
+  const navigate = useNavigate();
+
   useEffect(() => {
     const getRooms = async () => {
       const result = await fetch('http://localhost:3001/room');
@@ -46,7 +49,12 @@ export default function Rooms() {
   return (
     <>
       <List rooms={rooms} />
-      <Button />
+      <Button
+        title="방 생성"
+        onClick={() => {
+          navigate('/form');
+        }}
+      />
     </>
   );
 }
