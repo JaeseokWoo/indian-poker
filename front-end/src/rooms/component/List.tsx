@@ -6,9 +6,9 @@ export default function List({ rooms }: { rooms: any }) {
   const navigate = useNavigate();
   return (
     <>
-      <h1>GIF 채팅방</h1>
+      <h1>Indian-Poker</h1>
       <fieldset>
-        <legend>채팅방 목록</legend>
+        <legend>게임방 목록</legend>
         <table>
           <thead>
             <tr>
