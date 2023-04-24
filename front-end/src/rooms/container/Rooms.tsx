@@ -6,49 +6,49 @@ import List from '../component/List';
 import Button from '../component/Button';
 
 export default function Rooms() {
-  const [rooms, setRooms] = useState<any[]>([]);
+  const [gameRooms, setGameRooms] = useState<any[]>([]);
+  const [user, setUser] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
     const getRooms = async () => {
       const result = await fetch('http://localhost:3001/room');
-      const rooms = await result.json();
-      console.log(rooms);
-      setRooms(rooms);
+      const gameRooms = await result.json();
+      setGameRooms(gameRooms);
     };
 
     getRooms();
   }, []);
 
   useEffect(() => {
-    const socket = io('http://localhost:3001/room', {
+    const socket = io('http://localhost:3001/gameRooms', {
       path: '/socket.io',
-      transports: ['websocket'],
     });
 
     socket.on('disconnect', () => {
       console.log('disconnected with server');
     });
 
-    socket.on('newRoom', (newRoom: any) => {
-      setRooms((prevRooms) => [...prevRooms, newRoom]);
+    socket.on('login', (userInfo) => {
+      console.log(userInfo);
+      setUser(userInfo.id);
     });
 
-    socket.on('news', (data) => {
-      console.log(data);
-      socket.emit('reply', 'Hello Node.JS');
+    socket.on('newGameRoom', (newGameRoom: any) => {
+      setGameRooms((prevGameRooms) => [...prevGameRooms, newGameRoom]);
     });
 
     return () => {
       socket.off('connect');
       socket.off('disconnect');
-      socket.off('news');
+      socket.disconnect();
     };
   }, []);
 
   return (
     <>
-      <List rooms={rooms} />
+      <h1>{user}</h1>
+      <List rooms={gameRooms} />
       <Button
         title="방 생성"
         onClick={() => {

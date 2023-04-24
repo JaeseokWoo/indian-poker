@@ -1,15 +1,23 @@
-import { Express, RequestHandler } from 'express';
-import { Server } from 'socket.io';
+import { Express, RequestHandler, Request, NextFunction, Response } from 'express';
+import { Server, Socket } from 'socket.io';
 import ios from 'express-socket.io-session';
 
 export default (server: any, app: Express, sessionMiddleware: RequestHandler) => {
-  const io = new Server(server, { path: '/socket.io' });
+  const io = new Server(server, {
+    path: '/socket.io',
+    cors: {
+      origin: '*',
+      credentials: true,
+    },
+  });
+  const wrap = (middleware: any) => (socket: Socket, next: any) => middleware(socket.request, {} as Response, next);
   app.set('io', io);
-  const room = io.of('/room');
+  const gameRooms = io.of('/gameRooms');
   const chat = io.of('/chat');
-  io.use(ios(sessionMiddleware, { autoSave: true }));
+  io.use(wrap(sessionMiddleware));
+  // chat.use(wrap(sessionMiddleware));
 
-  room.on('connection', (socket) => {
+  gameRooms.on('connection', (socket) => {
     console.log('room 네임스페이스에 접속');
     socket.on('disconnect', () => {
       console.log('room 네임스페이스 접속 해제');
@@ -19,11 +27,12 @@ export default (server: any, app: Express, sessionMiddleware: RequestHandler) =>
   chat.on('connection', (socket) => {
     console.log('chat 네임스페이스에 접속');
     const req = socket.request;
-    const {
-      headers: { referer },
-    } = req;
-    const roomId = referer?.split('/')[referer.split('/').length - 1].replace(/\?.+/, '');
+    const roomId = socket.handshake.query.roomId;
     socket.join(roomId as string);
+    console.log(((req as any).session as any)?.color);
+    socket.to(roomId as string).emit('join', {
+      userId: ((req as Request).session as any)?.color,
+    });
 
     socket.on('disconnect', () => {
       console.log('chat 네임스페이스 접속 해제');

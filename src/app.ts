@@ -8,6 +8,7 @@ import cors from 'cors';
 
 import webSocket from './socket';
 import roomRouter from './routes/room';
+import loginRouter from './routes/login';
 
 const app = express();
 app.set('port', process.env.PORT || 3001);
@@ -40,12 +41,8 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use('/login', loginRouter);
 app.use('/room', roomRouter);
-
-app.use((req, res, next) => {
-  console.log('here');
-  res.json('test');
-});
 
 const server = app.listen(app.get('port'), () => {
   console.log(app.get('port'), '번 포트에서 대기 중');

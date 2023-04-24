@@ -10,8 +10,10 @@ router.post('/', (req, res, next) => {
   const { title } = req.body;
   const { color: owner } = req.session as any;
   const rooms = req.app.get('rooms');
-
-  req.app.set('rooms', [...rooms, { id: rooms.length + 1, title, owner }]);
+  const newRoom = { id: rooms.length + 1, title, owner };
+  req.app.set('rooms', [...rooms, newRoom]);
+  const io = req.app.get('io');
+  io.of('/room').emit('newRoom', newRoom);
   res.send(true);
 });
 
